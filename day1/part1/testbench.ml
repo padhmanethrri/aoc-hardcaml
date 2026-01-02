@@ -1,3 +1,12 @@
+(*
+  Testbench for Day 1 Part 1.
+  This file reads input from input.txt, invokes the design logic,
+  and prints the result. It serves as a simple testbench to
+  validate correctness before further hardware-oriented refinement.
+*)
+
+
+
 
 (* ===== Read input.txt into string list ===== *)
 let read_input filename =
