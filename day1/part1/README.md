@@ -83,5 +83,6 @@ considerations were kept in mind:
   style, which help describe hardware behavior more structurally than traditional
   Verilog for this kind of problem.
 
-Physical synthesis and ASIC flows were not explored for this baseline implementation,
-but the design is written with synthesizability and realistic resource usage in mind.
+Physical synthesis considerations informed the design at a high level to ensure
+the implementation remains synthesizable, while the work itself was focused on
+RTL-level modeling and simulation.
