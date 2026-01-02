@@ -16,46 +16,48 @@ from a software-style solution into a hardware-oriented design.
   design logic.
 
 - `testbench.ml`  
-  Acts as a testbench for the design. This file reads input from `input.txt`, instantiates
-  the design, drives the clock, runs a cycle-accurate simulation, and prints the resulting
-  output. It is used to validate correctness before further hardware refinement.
+  Acts as a testbench for the design. This file reads input from `input.txt`,
+  instantiates the design, drives the clock, runs a cycle-accurate simulation,
+  and prints the resulting output.
 
 - `input.txt`  
   Contains the puzzle input used to test and validate the implementation.
 
 ## Development Process
 
-Before implementing the design in Hardcaml, the problem was carefully analyzed to
-understand the required computation and edge cases. The logic was first reasoned about
-in a software-like manner to ensure correctness and remove ambiguity.
+Before implementing the design in Hardcaml, the problem was first analyzed to fully
+understand the required computation and edge cases. The logic was reasoned about in a
+software-like manner to ensure correctness before being mapped into a hardware-style
+implementation.
 
-Once the behavior was clear, the computation was structured so it could be expressed
-using hardware-style dataflow. State such as position and counters is modeled explicitly
-using registers, and updates occur on clock cycles, reflecting how the design would
-behave in real hardware.
+Once the behavior was clear, the computation was structured using explicit state and
+clocked updates. The dial position and count are modeled as registers, and each rotation
+is applied sequentially, mirroring how the logic would behave in actual hardware.
 
 The design and testbench were intentionally separated to follow standard hardware
-development practices, where the design describes behavior and the testbench is
-responsible for verification.
+development practices, where the design describes the behavior and the testbench is
+responsible for driving inputs and verifying results.
 
 ## Input Handling
 
-The puzzle input is provided through `input.txt`. Each line represents an operation
-specified by the problem. The testbench reads this file, parses the input, and applies
-the corresponding operations to the design during simulation.
+The puzzle input is provided through `input.txt`. Each line represents a single rotation
+instruction. The testbench reads and parses this input, converts it into rotation
+operations, and applies them to the design during simulation.
 
-Using an external input file allows the logic to be validated without relying on
-hardcoded values and makes it easier to test different input scenarios.
+Using an external input file avoids hardcoding values and makes it easy to validate the
+design using the full puzzle input.
 
 ## Testing / Testbench
 
 Testing is performed using `testbench.ml`. The testbench instantiates the design,
 drives the clock signal, and runs the simulation for the required number of cycles
-based on the length of the input sequence.
+based on the number of rotation instructions.
 
-After simulation completes, the final result is read from the design output and
-printed to the console. This setup serves as a simple but effective testbench to
-validate functional correctness before considering further optimization.
+After the simulation completes, the final output is read from the design and printed
+to the console.
+
+When simulated using the provided testbench and puzzle input, the design produced
+a final password value of **1139**.
 
 ## Design Considerations and Future Extensions
 
@@ -66,7 +68,7 @@ considerations were kept in mind:
 - **Scalability**:  
   The current design processes the input sequence sequentially, which is sufficient
   for validating correctness. For significantly larger inputs, the design could be
-  extended to use pipelining or parallel processing to improve throughput.
+  extended using pipelining or parallel processing to improve throughput.
 
 - **Efficiency**:  
   Area and performance trade-offs were not aggressively optimized in this version.
@@ -75,14 +77,13 @@ considerations were kept in mind:
 
 - **Architecture**:  
   The design explicitly models state using registers and clocked updates, reflecting
-  a hardware-oriented approach. This structure provides a foundation for exploring
+  a hardware-oriented approach. This structure provides a solid foundation for exploring
   FPGA-native parallelism that would not be available in a purely CPU-based solution.
 
 - **Language Features**:  
   Hardcaml was chosen to express the design due to its strong typing and compositional
-  style, which help describe hardware behavior more structurally than traditional
-  Verilog for this kind of problem.
+  style, which helps describe hardware behavior in a structured and maintainable way.
 
-Physical synthesis considerations informed the design at a high level to ensure
-the implementation remains synthesizable, while the work itself was focused on
-RTL-level modeling and simulation.
+Physical synthesis considerations informed the design at a high level to ensure the
+implementation remains synthesizable, while the work itself was focused on RTL-level
+modeling and simulation.
