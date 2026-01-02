@@ -3,20 +3,21 @@
 This directory contains my solution for Day 1, Part 2 of the Advent of FPGA Challenge,
 implemented using Hardcaml.
 
-Part 2 builds directly on the first part, but changes the counting rule in a way that
-makes the problem more event-driven rather than just state-based.
+Part 2 builds directly on Part 1, but changes the counting rule in a way that requires
+tracking events that occur during a rotation rather than only checking the final state.
 
 ## What Changed from Part 1
 
 In Part 1, the count was incremented only when a rotation ended with the dial pointing
 at position 0.
 
-In Part 2, every time the dial points at 0 must be counted, including occurrences
-during a rotation. This means that a single instruction can contribute multiple counts,
-especially when the rotation amount is large or wraps around the dial multiple times.
+In Part 2, every time the dial points at 0 must be counted, including occurrences during
+a rotation. This means that a single instruction can contribute multiple counts,
+especially when the rotation amount is large or causes the dial to wrap around multiple
+times.
 
 As a result, the solution needs to reason about intermediate events during movement,
-not just the final position.
+not just the final dial position.
 
 ## File Overview
 
@@ -38,14 +39,14 @@ not just the final position.
 The overall structure of the design remains similar to Part 1, with explicit state
 modeled using registers and updates occurring on clock edges.
 
-However, instead of simply checking whether a rotation ends at position 0, the logic
-now computes how many times position 0 is reached during each rotation. This allows
-the design to correctly handle cases where the dial wraps around multiple times within
-a single instruction.
+However, instead of checking only whether a rotation ends at position 0, the logic now
+computes how many times position 0 is reached during each rotation. This allows the
+design to correctly handle cases where the dial wraps around multiple times within a
+single instruction.
 
-Separating the event-counting logic (in the testbench) from the accumulation logic
-(in the design) keeps the hardware portion simple and focused, while still matching
-the problem specification exactly.
+Separating the event-counting logic (handled in the testbench) from the accumulation
+logic (handled in the design) keeps the hardware portion simple and focused, while still
+matching the problem specification.
 
 ## Input Handling
 
@@ -53,7 +54,7 @@ The input format is unchanged from Part 1. Each instruction is read from `input.
 parsed by the testbench, and applied sequentially during simulation.
 
 Keeping the same input interface makes it easy to compare the behavior of Part 1 and
-Part 2 and ensures that the differences are isolated to the counting logic.
+Part 2 and ensures that the additional complexity is isolated to the counting logic.
 
 ## Testing / Testbench
 
@@ -63,8 +64,10 @@ Testing is performed using `testbench.ml`. For each instruction, the testbench:
 3. Advances the simulation by one clock cycle
 
 After all instructions are processed, the final count is read from the design output
-and printed to the console. This confirms that intermediate zero-hits are correctly
-counted and accumulated.
+and printed to the console.
+
+When simulated using the provided testbench and full puzzle input, the design produced
+a final password value of **6684**.
 
 ## Design Considerations and Future Extensions
 
