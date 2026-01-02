@@ -21,11 +21,6 @@ RTL concepts such as registers, signals, and clocked updates.
 
 Solutions are organized by day, with each day further divided into parts following
 the Advent of Code problem structure.
-├── day1/
-│   ├── part1/
-│   ├── part2/
-│   └── README.md
-└── README.md
 
 Each part contains:
 - `design.ml` – hardware design logic
